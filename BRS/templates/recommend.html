@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+{% load staticfiles %}  
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>BRS</title>
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/static/css/plugins/steps/jquery.steps.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+		<style>
+			#loader-wrapper {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: 9999;
+			}
+
+			#loader-wrapper .loader-section {
+				position: fixed;
+				top: 0;
+				width: 51%;
+				height: 100%;
+				background: #eceff1;
+				z-index: 1000;
+				-webkit-transform: translateX(0);
+				-ms-transform: translateX(0);
+				transform: translateX(0);
+			}
+
+			#loader-wrapper .loader-section.section-left {
+				left: 0;
+			}
+
+			#loader-wrapper .loader-section.section-right {
+				right: 0;
+			}
+
+			#loader {
+				display: block;
+				position: relative;
+				left: 50%;
+				top: 50%;
+				width: 150px;
+				height: 150px;
+				margin: -75px 0 0 -75px;
+				border-radius: 50%;
+				border: 3px solid transparent;
+				border-top-color: #3498db;
+				-webkit-animation: spin 2s linear infinite;
+				animation: spin 2s linear infinite;
+				z-index: 1001;
+			}
+
+			#loader:before {
+				content: "";
+				position: absolute;
+				top: 5px;
+				left: 5px;
+				right: 5px;
+				bottom: 5px;
+				border-radius: 50%;
+				border: 3px solid transparent;
+				border-top-color: #e74c3c;
+				-webkit-animation: spin 3s linear infinite;
+				animation: spin 3s linear infinite;
+			}
+
+			#loader:after {
+				content: "";
+				position: absolute;
+				top: 15px;
+				left: 15px;
+				right: 15px;
+				bottom: 15px;
+				border-radius: 50%;
+				border: 3px solid transparent;
+				border-top-color: #f9c922;
+				-webkit-animation: spin 1.5s linear infinite;
+				animation: spin 1.5s linear infinite;
+			}
+
+			@-webkit-keyframes spin {
+				0% {
+					-webkit-transform: rotate(0deg);
+					-ms-transform: rotate(0deg);
+					transform: rotate(0deg);
+				}
+				100% {
+					-webkit-transform: rotate(360deg);
+					-ms-transform: rotate(360deg);
+					transform: rotate(360deg);
+				}
+			}
+
+			@keyframes spin {
+				0% {
+					-webkit-transform: rotate(0deg);
+					-ms-transform: rotate(0deg);
+					transform: rotate(0deg);
+				}
+				100% {
+					-webkit-transform: rotate(360deg);
+					-ms-transform: rotate(360deg);
+					transform: rotate(360deg);
+				}
+			}
+
+			.loaded #loader-wrapper {
+				visibility: hidden;
+				-webkit-transform: translateY(-100%);
+				-ms-transform: translateY(-100%);
+				transform: translateY(-100%);
+				-webkit-transition: all 0.3s 1s ease-out;
+				transition: all 0.3s 1s ease-out;
+			}
+
+			.loaded #loader-wrapper .loader-section.section-left {
+				-webkit-transform: translateX(-100%);
+				-ms-transform: translateX(-100%);
+				transform: translateX(-100%);
+				-webkit-transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+				transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+			}
+
+			.loaded #loader-wrapper .loader-section.section-right {
+				-webkit-transform: translateX(100%);
+				-ms-transform: translateX(100%);
+				transform: translateX(100%);
+				-webkit-transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+				transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+			}
+
+			.loaded #loader {
+				opacity: 0;
+				-webkit-transition: all 0.3s ease-out;
+				transition: all 0.3s ease-out;
+			}
+
+			.progress {
+				background-color: rgba(255, 64, 129, 0.22);
+			}
+		</style>
+
+	</head>
+
+<body>
+
+    <div id="wrapper">
+
+  <nav class="navbar-default navbar-static-side" role="navigation">
+				<div class="sidebar-collapse">
+					<ul class="nav metismenu" id="side-menu">
+						<li class="nav-header">
+							<div class="dropdown profile-element"> <span>
+                            <img alt="image" class="img-circle" src="../static/image/profile_small.jpg" />
+                             </span>
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+									<span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{username}}</strong>
+                            </span> </span>
+								</a>
+							</div>
+							<div class="logo-element">
+								BRS
+							</div>
+						</li>
+						<li>
+							<a href="/index"><i class="fa fa-th-large"></i> <span class="nav-label">书库书籍</span></a>
+						</li>
+						<li>
+							<a href="/knn"><i class="fa fa-desktop"></i> <span class="nav-label">Knn算法</span></a>
+						</li>
+						<li>
+							<a href="/kmeans"><i class="fa fa-desktop"></i> <span class="nav-label">Kmeans算法</span></a>
+						</li>
+						<li>
+							<a href="/bayes"><i class="fa fa-desktop"></i> <span class="nav-label">朴素贝叶斯算法</span></a>
+						</li>
+						<li>
+							<a href="/recommend"><i class="fa fa-diamond"></i> <span class="nav-label">更懂你的推荐</span></a>
+						</li>
+						<li>
+                    		<a href="/projects"><i class="fa fa-laptop"></i> <span class="nav-label">更多推荐</span></a>
+                		</li>
+					</ul>
+				</div>
+			</nav>
+
+        <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+        </div>
+            <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <a href="/logout">
+                        <i class="fa fa-sign-out"></i>注销
+                    </a>
+                </li>
+            </ul>
+
+        </nav>
+        </div>
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>推荐书籍</h2>
+                    <ol class="breadcrumb">
+                        <li>
+                            <a href="index.html">Home</a>
+                        </li>
+                        <li class="active">
+                            <strong>想看的书</strong>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-lg-2">
+
+                </div>
+            </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="jumbotron">
+                        <div class="form-group">
+							<input type="text" id="bookna" name="bookna"
+								class="form-control" placeholder="请输入想看的书名" required="">
+						</div>
+                        <button type="button" id="submit" class="btn btn-primary btn-lg">点击查看推荐的书</button>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>想看的书</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <p>点击查看想看的书</p>
+                        <div id="wizard">
+                            <h1>第一本</h1>
+                            <div class="step-content">
+                                <div class="text-center m-t-md">
+                                <h2 type="text" id="firstbookname"></h2>
+                                <p type="text" id="firstbookwriter"></p>
+                                <p type="text" id="firstbookhref"></p>
+                                </div>
+                            </div>
+
+                            <h1>第二本</h1>
+                            <div class="step-content">
+                                <div class="text-center m-t-md">
+                                <h2 type="text" id="secondbookname"></h2>
+                                <p type="text" id="secondbookwriter"></p>
+                                <p type="text" id="secondbookhref"></p>
+                                </div>
+                            </div>
+
+                            <h1>第三本</h1>
+                            <div class="step-content">
+                                <div class="text-center m-t-md">
+                                <h2 type="text" id="thirdbookname"></h2>
+                                <p type="text" id="thirdbookwriter"></p>
+                                <p type="text" id="thirdbookhref"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+        <div class="footer">
+            <div class="pull-right">
+                10GB of <strong>250GB</strong> Free.
+            </div>
+            <div>
+                <strong>Copyright</strong> Example Company &copy; 2014-2017
+            </div>
+        </div>
+
+        </div>
+        </div>
+
+
+    <!-- Mainly scripts -->
+    <script src="/static/js/jquery-3.1.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/layer/layer.js"></script>
+    <script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="/static/js/inspinia.js"></script>
+    <script src="/static/js/plugins/pace/pace.min.js"></script>
+
+    <!-- Steps -->
+    <script src="/static/js/plugins/steps/jquery.steps.min.js"></script>
+
+    <!-- Jquery Validate -->
+    <script src="/static/js/plugins/validate/jquery.validate.min.js"></script>
+
+
+    <script>
+        $(document).ready(function(){
+        	$("#wizard").steps();
+            $("#form").steps({
+                bodyTag: "fieldset",
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex)
+                    {
+                        return true;
+                    }
+
+                    // Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex === 3 && Number($("#age").val()) < 18)
+                    {
+                        return false;
+                    }
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex)
+                    {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex)
+                {
+                    // Suppress (skip) "Warning" step if the user is old enough.
+                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
+                    {
+                        $(this).steps("next");
+                    }
+
+                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    if (currentIndex === 2 && priorIndex === 3)
+                    {
+                        $(this).steps("previous");
+                    }
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                    var form = $(this);
+
+                    // Disable validation on fields that are disabled.
+                    // At this point it's recommended to do an overall check (mean ignoring only disabled fields)
+                    form.validate().settings.ignore = ":disabled";
+
+                    // Start validation; Prevent form submission if false
+                    return form.valid();
+                },
+                onFinished: function (event, currentIndex)
+                {
+                    var form = $(this);
+
+                    // Submit form input
+                    form.submit();
+                }
+            }).validate({
+                        errorPlacement: function (error, element)
+                        {
+                            element.before(error);
+                        },
+                        rules: {
+                            confirm: {
+                                equalTo: "#password"
+                            }
+                        }
+                    });
+          });
+
+    </script>
+
+    <script>
+    $("#submit").click(function(){
+    	var index = layer.load(0, {
+    		shade: [0.1, '#fff'] //0.1透明度的白色背景
+		});
+
+			$.ajax({
+				type : "POST",
+				dataType : "json",
+				data : {
+					"bookna" : $("#bookna").val()
+				},
+				url : "/showinfo/",
+				success : function(data) {
+				    //var list=data
+
+					$('#firstbookname').text(data[0].name);
+					$('#firstbookwriter').text(data[0].writer);
+					$('#firstbookhref').text(data[0].href);
+					$('#secondbookname').text(data[1].name);
+					$('#secondbookwriter').text(data[1].writer);
+					$('#secondbookhref').text(data[1].href);
+					$('#thirdbookname').text(data[2].name);
+					$('#thirdbookwriter').text(data[2].writer);
+					$('#thirdbookhref').text(data[2].href);
+					layer.close(index);
+				},
+				error:function(a,b,c){
+				  layer.close(index);
+				  var i = 1;
+				}
+			})
+		});
+
+    </script>
+
+</body>
+
+</html>

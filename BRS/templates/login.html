@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+{% load staticfiles %}  
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>登录</title>
+
+<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+<link href="/static/font-awesome/css/font-awesome.css"
+	rel="stylesheet">
+
+<link href="/static/css/animate.css" rel="stylesheet">
+<link href="/static/css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+	<div class="middle-box text-center loginscreen animated fadeInDown">
+		<div>
+			<div>
+
+				<h1 class="logo-name">R+</h1>
+
+			</div>
+			<h3>欢迎！</h3>
+			<p>
+				读书推荐系统
+				<!--Continually expanded and constantly improved Inspinia Admin Them (IN+)-->
+			</p>
+			<p>登录</p>
+			<form class="m-t" role="form">
+
+				<div class="form-group">
+					<input type="username" id="username" name="username"
+						class="form-control" placeholder="Username" required="">
+				</div>
+				<div class="form-group">
+					<input type="password" id="password" name="password"
+						class="form-control" placeholder="Password" required="">
+				</div>
+				<button type="button" id="submit"
+					class="btn btn-primary block full-width m-b">登录</button>
+
+				<a href="#"><small>忘记密码？</small></a>
+				<p class="text-muted text-center">
+					<small>不是会员？</small>
+				</p>
+				<a class="btn btn-sm btn-white btn-block" id="register" href="/register_show">注册</a>
+			</form>
+			<p class="m-t">
+				<small>版权归本人所有，谢绝参考！</small>
+			</p>
+		</div>
+	</div>
+
+	<!-- Mainly scripts -->
+	<script src="/static/js/jquery-3.1.1.min.js"></script>
+	<script src="/static/js/bootstrap.min.js"></script>
+	<script src="/static/layer.js"></script>
+
+	<script type="text/javascript">
+		$("#submit").click(function() {
+			$.ajax({
+				type : "POST",
+				dataType : "json",
+				data : {
+					"username" : $("#username").val(),
+					"password" : $("#password").val()
+				},
+				url : "login/",
+				success : function(data) {
+					if(data.res==1){
+						location.href='index/';
+					}
+					else if(data.res==0){
+						layer.msg("密码错误",{icon:0});
+					}
+					else if(data.res==-1){
+						layer.msg("用户名不存在！",{icon:0})
+					}
+					else if(data.res==100){
+						layer.msg("方法错误！",{icon:0})
+					}
+					else if(data.res==2){
+						location.href='adminbooks/'
+					}
+				},
+				error:function(a,b,c){
+				  var i = 1;
+				}
+			})
+		})
+	</script>
+
+</body>
+
+</html>

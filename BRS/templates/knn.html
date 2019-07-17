@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+{% load staticfiles %}  
+<html>
+
+<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>BRS</title>
+
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+		<link href="/static/css/animate.css" rel="stylesheet">
+		<link href="/static/css/style.css" rel="stylesheet">
+		<style>
+			#loader-wrapper {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: 9999;
+			}
+
+			#loader-wrapper .loader-section {
+				position: fixed;
+				top: 0;
+				width: 51%;
+				height: 100%;
+				background: #eceff1;
+				z-index: 1000;
+				-webkit-transform: translateX(0);
+				-ms-transform: translateX(0);
+				transform: translateX(0);
+			}
+
+			#loader-wrapper .loader-section.section-left {
+				left: 0;
+			}
+
+			#loader-wrapper .loader-section.section-right {
+				right: 0;
+			}
+
+			#loader {
+				display: block;
+				position: relative;
+				left: 50%;
+				top: 50%;
+				width: 150px;
+				height: 150px;
+				margin: -75px 0 0 -75px;
+				border-radius: 50%;
+				border: 3px solid transparent;
+				border-top-color: #3498db;
+				-webkit-animation: spin 2s linear infinite;
+				animation: spin 2s linear infinite;
+				z-index: 1001;
+			}
+
+			#loader:before {
+				content: "";
+				position: absolute;
+				top: 5px;
+				left: 5px;
+				right: 5px;
+				bottom: 5px;
+				border-radius: 50%;
+				border: 3px solid transparent;
+				border-top-color: #e74c3c;
+				-webkit-animation: spin 3s linear infinite;
+				animation: spin 3s linear infinite;
+			}
+
+			#loader:after {
+				content: "";
+				position: absolute;
+				top: 15px;
+				left: 15px;
+				right: 15px;
+				bottom: 15px;
+				border-radius: 50%;
+				border: 3px solid transparent;
+				border-top-color: #f9c922;
+				-webkit-animation: spin 1.5s linear infinite;
+				animation: spin 1.5s linear infinite;
+			}
+
+			@-webkit-keyframes spin {
+				0% {
+					-webkit-transform: rotate(0deg);
+					-ms-transform: rotate(0deg);
+					transform: rotate(0deg);
+				}
+				100% {
+					-webkit-transform: rotate(360deg);
+					-ms-transform: rotate(360deg);
+					transform: rotate(360deg);
+				}
+			}
+
+			@keyframes spin {
+				0% {
+					-webkit-transform: rotate(0deg);
+					-ms-transform: rotate(0deg);
+					transform: rotate(0deg);
+				}
+				100% {
+					-webkit-transform: rotate(360deg);
+					-ms-transform: rotate(360deg);
+					transform: rotate(360deg);
+				}
+			}
+
+			.loaded #loader-wrapper {
+				visibility: hidden;
+				-webkit-transform: translateY(-100%);
+				-ms-transform: translateY(-100%);
+				transform: translateY(-100%);
+				-webkit-transition: all 0.3s 1s ease-out;
+				transition: all 0.3s 1s ease-out;
+			}
+
+			.loaded #loader-wrapper .loader-section.section-left {
+				-webkit-transform: translateX(-100%);
+				-ms-transform: translateX(-100%);
+				transform: translateX(-100%);
+				-webkit-transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+				transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+			}
+
+			.loaded #loader-wrapper .loader-section.section-right {
+				-webkit-transform: translateX(100%);
+				-ms-transform: translateX(100%);
+				transform: translateX(100%);
+				-webkit-transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+				transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+			}
+
+			.loaded #loader {
+				opacity: 0;
+				-webkit-transition: all 0.3s ease-out;
+				transition: all 0.3s ease-out;
+			}
+
+			.progress {
+				background-color: rgba(255, 64, 129, 0.22);
+			}
+		</style>
+
+	</head>
+
+<body>
+
+    <div id="wrapper">
+
+    <nav class="navbar-default navbar-static-side" role="navigation">
+				<div class="sidebar-collapse">
+					<ul class="nav metismenu" id="side-menu">
+						<li class="nav-header">
+							<div class="dropdown profile-element"> <span>
+                            <img alt="image" class="img-circle" src="../static/image/profile_small.jpg" />
+                             </span>
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+									<span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{username}}</strong>
+                            </span> </span>
+								</a>
+							</div>
+							<div class="logo-element">
+								BRS
+							</div>
+						</li>
+						<li>
+							<a href="/index"><i class="fa fa-th-large"></i> <span class="nav-label">书库书籍</span></a>
+						</li>
+						<li>
+							<a href="/knn"><i class="fa fa-desktop"></i> <span class="nav-label">Knn算法</span></a>
+						</li>
+						<li>
+							<a href="/kmeans"><i class="fa fa-desktop"></i> <span class="nav-label">Kmeans算法</span></a>
+						</li>
+						<li>
+							<a href="/bayes"><i class="fa fa-desktop"></i> <span class="nav-label">朴素贝叶斯算法</span></a>
+						</li>
+						<li>
+							<a href="/recommend"><i class="fa fa-diamond"></i> <span class="nav-label">更懂你的推荐</span></a>
+						</li>
+						<li>
+                    		<a href="/projects"><i class="fa fa-laptop"></i> <span class="nav-label">更多推荐</span></a>
+                		</li>
+					</ul>
+				</div>
+			</nav>
+        <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+        </div>
+            <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <a href="/logout">
+                        <i class="fa fa-sign-out"></i> 注销
+                    </a>
+                </li>
+            </ul>
+
+        </nav>
+        </div>
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>KNN</h2>
+                    <ol class="breadcrumb">
+                        <li>
+                            <a href="index.html">Home</a>
+                        </li>
+                        <li>
+                            <a>所用算法</a>
+                        </li>
+                        <li class="active">
+                            <strong>KNN</strong>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-lg-2">
+
+                </div>
+            </div>
+        <div class="wrapper wrapper-content  animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>KNN基本介绍</h5>
+                        </div>
+
+                        <div class="ibox-content">
+
+                            <strong>KNN</strong>
+
+                            <p>邻近算法，或者说K最近邻(kNN，k-NearestNeighbor)分类算法是数据挖掘分类技术中最简单的方法之一。所谓K最近邻，就是k个最近的邻居的意思，说的是每个样本都可以用它最接近的k个邻居来代表。
+								<code>kNN算法的核心思想是如果一个样本在特征空间中的k个最相邻的样本中的大多数属于某一个类别</code>，则该样本也属于这个类别，并具有这个类别上样本的特性。
+								该方法在确定分类决策上只依据最邻近的一个或者几个样本的类别来决定待分样本所属的类别。
+								 kNN方法在类别决策时，只与极少量的相邻样本有关。由于kNN方法主要靠周围有限的邻近的样本，
+								 而不是靠判别类域的方法来确定所属类别的，因此对于类域的交叉或重叠较多的待分样本集来说，kNN方法较其他方法更为适合。</p>
+
+                            <p>部分代码示例</p>
+                            <pre>
+#计算距离
+def euclideanDistance(instance1,instance2,length):
+    distance = 0
+    for x in range(length):
+        distance = pow((instance1[x] - instance2[x]),2)
+    return math.sqrt(distance)
+
+#返回K个最近邻
+def getNeighbors(trainingSet,testInstance,k):
+    distances = []
+    length = len(testInstance) -1
+    #计算每一个测试实例到训练集实例的距离
+    for x in range(len(trainingSet)):
+        dist = euclideanDistance(testInstance, trainingSet[x], length)
+        distances.append((trainingSet[x],dist))
+    #对所有的距离进行排序
+    distances.sort(key=operator.itemgetter(1))
+    neighbors = []
+    #返回k个最近邻
+    for x in range(k):
+        neighbors.append(distances[x][0])
+    return neighbors </pre>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+
+
+		<!-- Mainly scripts -->
+    <script src="/static/js/jquery-3.1.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Flot -->
+    <script src="/static/js/plugins/flot/jquery.flot.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.spline.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.pie.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.symbol.js"></script>
+    <script src="/static/js/plugins/flot/jquery.flot.time.js"></script>
+
+    <!-- Peity -->
+    <script src="/static/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="/static/js/demo/peity-demo.js"></script>
+
+    <!-- Custom and plugin javascript -->
+		<script src="/static/js/inspinia.js"></script>
+		<script src="/static/js/vue.js"></script>
+		<script src="/static/js/plugins/pace/pace.min.js"></script>
+
+    <!-- jQuery UI -->
+    <script src="/static/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+    <!-- Jvectormap -->
+    <script src="/static/js/plugins/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="/static/js/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+
+    <!-- EayPIE -->
+    <script src="/static/js/plugins/easypiechart/jquery.easypiechart.js"></script>
+
+    <!-- Sparkline -->
+    <script src="/static/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Sparkline demo data  -->
+    <script src="/static/js/demo/sparkline-demo.js"></script>
+
+<!--  <script>
+
+
+    $(document).ready(function () {
+
+        // Set idle time
+        $( document ).idleTimer( 5000 );
+
+    });
+
+    $( document ).on( "idle.idleTimer", function(event, elem, obj){
+        toastr.options = {
+            "positionClass": "toast-top-right",
+            "timeOut": 8000
+        }
+
+        toastr.warning('You can call any function after idle timeout.','Idle time');
+        $('.custom-alert').fadeIn();
+        $('.custom-alert-active').fadeOut();
+
+    });
+
+    $( document ).on( "active.idleTimer", function(event, elem, obj, triggerevent){
+        // function you want to fire when the user becomes active again
+        toastr.clear();
+        $('.custom-alert').fadeOut();
+        toastr.success('Great that you decided to move a mouse.','You are back. ');
+
+
+
+    });
+</script>-->
+
+
+</body>
+
+</html>
